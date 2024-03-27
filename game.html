@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="game.css">
+	</head>
+	<body>
+		<h1>Guess A Number From 1-100</h1>
+		<input id="num" type="number" placeholder="输入你猜的数字" />
+		<br>
+		<button id="guess-button" onclick="guess()">Guess</button>
+		<br>
+		已经猜了<span id="count">0</span>次
+		你还有<span id="opportunity">6</span>次机会
+		<div class="retry-button">
+			<button onclick="location.reload()">Retry</button>
+		</div>
+		<div class="answer-button">
+			<button onclick="">Answer</button>
+		</div>
+		<span id="result"></span>
+		<div id="guess-history"></div>
+		<script type="text/javascript">
+			let countSpan = document.querySelector("#count");
+			let opportunitySpan = document.querySelector("#opportunity");
+			var random = parseInt(Math.random() * 100 + 1);
+			var count = 0;
+			var opportunity = 6;
+			var guessHistory = [];
+			var showAlertFlag = false;
+			document.querySelector(".answer-button button").addEventListener("click", function() {
+				alert("正确答案是" + random);
+				document.getElementById('num').disabled = true;
+			});
+			function guess() {
+				if (count === 6 && opportunity === 0) {
+        	document.getElementById('num').disabled = true;
+					showAlertFlag = true;
+					alert("你的机会用完了，请再试一次吧！");
+        	return;
+				}
+				count+=1;
+				opportunity-=1;
+				countSpan.textContent = count;
+				opportunitySpan.textContent = opportunity;
+				var num1 = document.getElementById('num').value;
+				if (!isNaN(num1) && num1 !== '' && num1 >= 1 && num1 <= 100) {
+					if (num1 < random) {
+						guessHistory.push("你猜错了，真正的答案比" + num1 + "大");
+					} else if (num1 > random) {
+						guessHistory.push("你猜错了，真正的答案比" + num1 + "小");
+					} else {
+						document.getElementById('result').innerHTML = "恭喜你，猜对了";
+						document.getElementById('result').style.fontSize = "30px";
+						document.getElementById('result').style.color = "pink";
+						document.getElementById('guess-button').disabled = true;
+					}
+					document.getElementById('num').value = '';
+					document.getElementById('guess-history').innerHTML = guessHistory.join("<br>");
+				} else {
+					showAlert("请按要求输入字符");
+				}
+				function showAlert(message){
+					const alertDiv = document.createElement('div');
+					alertDiv.className = 'centered-alert';
+					alertDiv.textContent = message;
+					alertDiv.style.color = 'black';
+					document.body.appendChild(alertDiv);
+					setTimeout(() => {
+						document.body.removeChild(alertDiv);
+					}, 1500);
+				}
+			}
+		</script>
+	</body>
+</html>
